@@ -6,23 +6,23 @@ from dotenv import load_dotenv
 
 load_dotenv()  # loads .env file
 
-TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
-TOGETHER_URL = "https://api.together.xyz/v1/chat/completions"
-
-def query_llama(prompt: str) -> str:
+def call_llm(prompt: str) -> str:
+    """
+    Calls the Together API for Llama-3 with the given prompt.
+    Returns the model's answer as a string.
+    """
+    api_key = os.getenv("TOGETHER_API_KEY")
+    url = "https://api.together.xyz/v1/chat/completions"
     headers = {
-        "Authorization": f"Bearer {TOGETHER_API_KEY}",
+        "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json"
     }
     data = {
-        "model": "meta-llama/Llama-3-8b-chat-hf",
-        "messages": [
-            {"role": "system", "content": "You are a helpful legal assistant. Only answer using the provided context."},
-            {"role": "user", "content": prompt}
-        ],
+        "model": "meta-llama/Llama-3-70b-chat-hf",
+        "messages": [{"role": "user", "content": prompt}],
         "max_tokens": 512,
-        "temperature": 0.3
+        "temperature": 0.2
     }
-    response = requests.post(TOGETHER_URL, headers=headers, json=data, timeout=30)
+    response = requests.post(url, headers=headers, json=data)
     response.raise_for_status()
     return response.json()["choices"][0]["message"]["content"]

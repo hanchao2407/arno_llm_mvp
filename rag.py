@@ -4,7 +4,7 @@ from PyPDF2 import PdfReader
 from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
-from llm import query_llama
+from llm import call_llm
 
 embedding_model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
@@ -45,5 +45,5 @@ def answer_query(db, query, top_k=5):
         })
     context = "\n".join([f"[{s['metadata']['source']}] {s['page_content']}" for s in sources])
     prompt = f"Context:\n{context}\n\nQuestion: {query}\nAnswer:"
-    answer = query_llama(prompt)
+    answer = call_llm(prompt)
     return answer, sources
