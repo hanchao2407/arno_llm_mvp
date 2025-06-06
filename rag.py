@@ -4,7 +4,7 @@ from PyPDF2 import PdfReader
 from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
-import tempfile
+from llm import query_llama
 
 embedding_model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
@@ -14,17 +14,24 @@ def chunk_text(text, chunk_size=500, overlap=50):
         chunks.append(text[i:i + chunk_size])
     return chunks
 
-def load_document_and_create_index(uploaded_file):
-    reader = PdfReader(uploaded_file)
-    text = "".join([page.extract_text() for page in reader.pages])
-    chunks = chunk_text(text)
-    embeddings = embedding_model.encode(chunks)
+def load_documents_and_create_index(uploaded_files):
+    all_chunks = []
+    all_metadata = []
+    for file in uploaded_files:
+        reader = PdfReader(file)
+        text = "".join([page.extract_text() for page in reader.pages])
+        chunks = chunk_text(text)
+        metadata = [{"source": f"{file.name}_chunk_{i}"} for i in range(len(chunks))]
+        all_chunks.extend(chunks)
+        all_metadata.extend(metadata)
+    embeddings = embedding_model.encode(all_chunks)
     index = faiss.IndexFlatL2(embeddings.shape[1])
     index.add(np.array(embeddings))
     return {
         "index": index,
-        "chunks": chunks,
-        "embeddings": embeddings
+        "chunks": all_chunks,
+        "embeddings": embeddings,
+        "metadata": all_metadata
     }
 
 def answer_query(db, query, top_k=5):
@@ -34,9 +41,9 @@ def answer_query(db, query, top_k=5):
     for idx in I[0]:
         sources.append({
             "page_content": db["chunks"][idx],
-            "metadata": {"source": f"chunk_{idx}"}
+            "metadata": db["metadata"][idx]
         })
     context = "\n".join([f"[{s['metadata']['source']}] {s['page_content']}" for s in sources])
-    # Placeholder for LLM call (OpenAI, Ollama, etc.)
-    answer = f"Simulated answer based on:\n\n{context[:1000]}"
+    prompt = f"Context:\n{context}\n\nQuestion: {query}\nAnswer:"
+    answer = query_llama(prompt)
     return answer, sources
