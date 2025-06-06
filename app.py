@@ -22,27 +22,41 @@ st.markdown("""
     }
     /* Chat bubbles */
     .stChatMessage .stMarkdown {
-        background: #444654;
+        background: transparent;
         color: #ececf1;
         border-radius: 1.2em;
-        padding: 1.1em 1.4em;
+        padding: 0;
         margin-bottom: 0.2em;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        box-shadow: none;
         font-size: 1.08em;
         border: none;
+    }
+    .stChatMessage.user {
+        display: flex;
+        justify-content: flex-end;
     }
     .stChatMessage.user .stMarkdown {
         background: #2a2b32;
         color: #ececf1;
         text-align: right;
-        margin-left: 20%;
+        max-width: 75%;
+        border-radius: 1.2em;
+        padding: 1.1em 1.4em;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         border: none;
+        display: inline-block;
+        margin-left: 0;
+        margin-right: 0;
     }
     .stChatMessage.assistant .stMarkdown {
-        background: #444654;
+        background: transparent;
         color: #ececf1;
         margin-right: 20%;
         border: none;
+        padding: 0;
+        box-shadow: none;
+        float: none;
+        width: 100%;
     }
     /* Chat input */
     .stChatInput {
@@ -129,15 +143,29 @@ with tab1:
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
                 try:
+                    from llm import call_llm
+                    system_instruction = {
+                        "role": "system",
+                        "content": "You are a helpful legal assistant. Always answer in the same language as the user's question."
+                    }
+                    # Build messages list: system + chat history + new user prompt
+                    messages = [system_instruction]
+                    for msg in st.session_state.messages:
+                        messages.append({"role": msg["role"], "content": msg["content"]})
+
                     if st.session_state.db is not None:
-                        answer, sources = answer_query(st.session_state.db, prompt)
-                    else:
-                        from llm import call_llm
-                        system_instruction = (
-                            "You are a helpful legal assistant. Always answer in the same language as the user's question."
+                        # RAG: Add context as assistant message before user prompt
+                        from rag import answer_query
+                        answer, sources, context = answer_query(
+                            st.session_state.db, prompt, return_context=True
                         )
-                        answer = call_llm(f"{system_instruction}\n\nQuestion: {prompt}\nAnswer:")
+                        # Insert context as an assistant message before the last user message
+                        messages.insert(-1, {"role": "assistant", "content": f"Relevant context:\n{context}"})
+                        answer = call_llm(messages)
+                    else:
+                        answer = call_llm(messages)
                         sources = []
+
                 except Exception as e:
                     answer = f"⚠️ Error: {str(e)}"
                     sources = []

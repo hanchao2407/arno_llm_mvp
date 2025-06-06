@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()  # loads .env file
 
-def call_llm(prompt: str) -> str:
+def call_llm(messages) -> str:
     """
     Calls the Together API for Llama-3 with the given prompt.
     Returns the model's answer as a string.
@@ -19,7 +19,7 @@ def call_llm(prompt: str) -> str:
     }
     data = {
         "model": "meta-llama/Llama-3-70b-chat-hf",
-        "messages": [{"role": "user", "content": prompt}],
+        "messages": messages,
         "max_tokens": 512,
         "temperature": 0.2
     }

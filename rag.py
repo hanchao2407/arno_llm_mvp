@@ -34,7 +34,7 @@ def load_documents_and_create_index(uploaded_files):
         "metadata": all_metadata
     }
 
-def answer_query(db, query, top_k=5):
+def answer_query(db, query, top_k=5, return_context=False):
     query_vector = embedding_model.encode([query])[0]
     D, I = db["index"].search(np.array([query_vector]), top_k)
     sources = []
@@ -44,10 +44,27 @@ def answer_query(db, query, top_k=5):
             "metadata": db["metadata"][idx]
         })
     context = "\n".join([f"[{s['metadata']['source']}] {s['page_content']}" for s in sources])
-    # Add system instruction for language matching
-    system_instruction = (
-        "You are a helpful legal assistant. Always answer in the same language as the user's question."
-    )
-    prompt = f"{system_instruction}\n\nContext:\n{context}\n\nQuestion: {query}\nAnswer:"
-    answer = call_llm(prompt)
+    if return_context:
+        return "", sources, context  # The actual LLM call is now in app.py
+    system_instruction = {
+        "role": "system",
+        "content": "You are a helpful legal assistant. Always answer in the same language as the user's question."
+    }
+    # Build messages list: system + chat history
+    messages = [system_instruction]
+    for msg in st.session_state.messages:
+        messages.append({"role": msg["role"], "content": msg["content"]})
+
+    if st.session_state.db is not None:
+        from rag import answer_query
+        _, sources, context = answer_query(st.session_state.db, prompt, return_context=True)
+        # Add context as an assistant message before the user prompt
+        messages.append({"role": "assistant", "content": f"Relevant context:\n{context}"})
+        messages.append({"role": "user", "content": prompt})
+        answer = call_llm(messages)
+    else:
+        messages.append({"role": "user", "content": prompt})
+        answer = call_llm(messages)
+        sources = []
+    
     return answer, sources
