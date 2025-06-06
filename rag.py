@@ -44,6 +44,10 @@ def answer_query(db, query, top_k=5):
             "metadata": db["metadata"][idx]
         })
     context = "\n".join([f"[{s['metadata']['source']}] {s['page_content']}" for s in sources])
-    prompt = f"Context:\n{context}\n\nQuestion: {query}\nAnswer:"
+    # Add system instruction for language matching
+    system_instruction = (
+        "You are a helpful legal assistant. Always answer in the same language as the user's question."
+    )
+    prompt = f"{system_instruction}\n\nContext:\n{context}\n\nQuestion: {query}\nAnswer:"
     answer = call_llm(prompt)
     return answer, sources

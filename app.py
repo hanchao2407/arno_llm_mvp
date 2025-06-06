@@ -133,7 +133,10 @@ with tab1:
                         answer, sources = answer_query(st.session_state.db, prompt)
                     else:
                         from llm import call_llm
-                        answer = call_llm(prompt)
+                        system_instruction = (
+                            "You are a helpful legal assistant. Always answer in the same language as the user's question."
+                        )
+                        answer = call_llm(f"{system_instruction}\n\nQuestion: {prompt}\nAnswer:")
                         sources = []
                 except Exception as e:
                     answer = f"⚠️ Error: {str(e)}"
