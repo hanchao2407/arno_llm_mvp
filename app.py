@@ -1,8 +1,100 @@
 import streamlit as st
 from rag import load_documents_and_create_index, answer_query
 
-st.set_page_config(page_title="Legal RAG Assistant", layout="wide")
-st.title("📚 Legal Document Assistant (Chat)")
+st.set_page_config(
+    page_title="Arnos Legal LLM Demo",
+    layout="wide",
+    page_icon="⚖️"
+)
+
+# ChatGPT-like UI: soft background, rounded chat bubbles, minimal chrome
+st.markdown("""
+    <style>
+    .stApp {
+        background: #343541;
+        color: #ececf1;
+    }
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        max-width: 900px;
+        margin: auto;
+    }
+    /* Chat bubbles */
+    .stChatMessage .stMarkdown {
+        background: #444654;
+        color: #ececf1;
+        border-radius: 1.2em;
+        padding: 1.1em 1.4em;
+        margin-bottom: 0.2em;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        font-size: 1.08em;
+        border: none;
+    }
+    .stChatMessage.user .stMarkdown {
+        background: #2a2b32;
+        color: #ececf1;
+        text-align: right;
+        margin-left: 20%;
+        border: none;
+    }
+    .stChatMessage.assistant .stMarkdown {
+        background: #444654;
+        color: #ececf1;
+        margin-right: 20%;
+        border: none;
+    }
+    /* Chat input */
+    .stChatInput {
+        background: #40414f;
+        color: #ececf1 !important;
+        border-radius: 1.2em;
+        border: 1px solid #565869;
+        padding: 0.8em 1.2em;
+        font-size: 1.08em;
+        margin-bottom: 1.5em;
+    }
+    .stChatInput input {
+        color: #ececf1 !important;
+        background: #40414f !important;
+    }
+    /* Button */
+    .stButton>button {
+        background-color: #19c37d;
+        color: #fff;
+        border-radius: 8px;
+        border: none;
+        padding: 0.5em 1.5em;
+        font-size: 1.08em;
+        transition: background 0.2s;
+    }
+    .stButton>button:hover {
+        background-color: #127a4f;
+        color: #fff;
+    }
+    /* Tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        justify-content: center;
+        background: transparent;
+    }
+    .stTabs [data-baseweb="tab"] {
+        font-size: 1.1em;
+        padding: 0.7em 2em;
+        color: #ececf1 !important;
+        background: #343541 !important;
+        border: none !important;
+        border-bottom: 2px solid transparent !important;
+        transition: color 0.2s;
+    }
+    .stTabs [aria-selected="true"] {
+        border-bottom: 2px solid #444654 !important;
+        color: #fff !important;
+        background: #343541 !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+st.title("⚖️ Arnos Legal LLM Demo")
 
 tab1, tab2 = st.tabs(["Chat", "Settings"])
 
@@ -40,8 +132,7 @@ with tab1:
                     if st.session_state.db is not None:
                         answer, sources = answer_query(st.session_state.db, prompt)
                     else:
-                        # No documents: just use LLM (no RAG)
-                        from llm import call_llm  # Import your LLM call function
+                        from llm import call_llm
                         answer = call_llm(prompt)
                         sources = []
                 except Exception as e:
