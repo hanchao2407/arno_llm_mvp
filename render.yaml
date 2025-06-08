@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: chroma-db
+    env: docker
+    repo: https://github.com//hanchao2407/arno_llm_mvp
+    region: oregon
+    plan: free
+    dockerfilePath: chroma_server/Dockerfile
+    autoDeploy: false
+    healthCheckPath: /
+    envVars:
+      - key: CHROMA_SERVER_HTTP_PORT
+        value: 8000
