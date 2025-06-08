@@ -10,7 +10,7 @@ import torch
 if hasattr(torch, "classes"):
     del torch.classes
 
-st.set_page_config(page_title="Legal Chat mit Chroma", layout="wide")
+st.set_page_config(page_title="Arnos Legal LLM", layout="wide")
 
 from sentence_transformers import SentenceTransformer
 import chromadb
