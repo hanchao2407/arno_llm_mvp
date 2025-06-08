@@ -78,7 +78,6 @@ def answer_query(db, query, top_k=5, return_context=False):
     if return_context:
         return "", sources, context
 
-    # System Prompt für Sprachlogik
     system_instruction = {
         "role": "system",
         "content": "You are a helpful legal assistant. Always answer in the same language as the user's question."
@@ -104,6 +103,20 @@ if uploaded_files and st.sidebar.button("🔍 Index erstellen"):
         st.session_state.db = load_documents_and_create_index(uploaded_files)
     st.sidebar.success("✅ Dokumente erfolgreich indexiert!")
 
+# --- Bereits indexierte PDFs anzeigen ---
+existing_sources = collection.get(include=["metadatas"], limit=1000)["metadatas"]
+indexed_files = set()
+
+for meta in existing_sources:
+    if "source" in meta:
+        fname = meta["source"].split("_chunk_")[0]
+        indexed_files.add(fname)
+
+if indexed_files:
+    st.sidebar.markdown("### 📂 Bereits indexierte PDFs:")
+    for fname in sorted(indexed_files):
+        st.sidebar.markdown(f"• `{fname}`")
+
 # --- UI: Chatbereich ---
 st.title("📄 Legal Chat mit Chroma")
 
@@ -111,7 +124,7 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 if "db" not in st.session_state:
-    st.session_state.db = None
+    st.session_state.db = {"collection": collection}
 
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
