@@ -1,5 +1,5 @@
 import streamlit as st
-from rag import load_documents_and_create_index, answer_query
+from rag_chroma import load_documents_and_create_index, answer_query
 
 st.set_page_config(
     page_title="Arnos Legal LLM Demo",
