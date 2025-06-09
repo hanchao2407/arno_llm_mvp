@@ -24,12 +24,25 @@ def get_embedding_model():
 embedding_model = get_embedding_model()
 
 # Chroma REST Setup
-os.environ["CHROMA_API_IMPL"] = "rest"
-os.environ["CHROMA_SERVER_HOST"] = "localhost"
-os.environ["CHROMA_SERVER_HTTP_PORT"] = "8000"
-os.environ["CHROMA_SERVER_SSL_ENABLED"] = "false"
+# os.environ["CHROMA_API_IMPL"] = "rest"
+# os.environ["CHROMA_SERVER_HOST"] = "arno-llm-mvp-1.onrender.com"
+# os.environ["CHROMA_SERVER_HTTP_PORT"] = "443"
+# os.environ["CHROMA_SERVER_SSL_ENABLED"] = "false"
 
-client = chromadb.HttpClient()
+# os.environ["CHROMA_API_IMPL"] = "rest"
+# os.environ["CHROMA_SERVER_HOST"] = "arno-llm-mvp-1.onrender.com"  # ohne http
+# os.environ["CHROMA_SERVER_HTTP_PORT"] = "443"
+# os.environ["CHROMA_SERVER_SSL_ENABLED"] = "true"
+
+
+# client = chromadb.HttpClient()
+
+client = chromadb.HttpClient(
+    host="https://arno-llm-mvp-1.onrender.com",
+    port=443,
+    ssl=True
+)
+
 
 try:
     collection = client.get_or_create_collection(name="legal_docs")
