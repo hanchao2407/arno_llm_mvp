@@ -6,4 +6,4 @@ ENV IS_PERSISTENT=TRUE
 
 COPY chroma_db /data
 
-CMD ["chromadb", "run", "--host", "0.0.0.0", "--port", "8000", "--path", "/data"]
+CMD ["python", "-m", "chromadb", "run", "--host", "0.0.0.0", "--port", "8000", "--path", "/data"]
