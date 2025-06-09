@@ -14,7 +14,6 @@ st.set_page_config(page_title="Arnos Legal LLM", layout="wide")
 
 from sentence_transformers import SentenceTransformer
 import chromadb
-from chromadb.config import Settings
 from llm import call_llm
 
 # Embedding model laden (gecached)
