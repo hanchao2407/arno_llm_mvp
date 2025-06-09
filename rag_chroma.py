@@ -47,7 +47,7 @@ embedding_model = get_embedding_model()
 port = int(os.environ.get("PORT", 8000))  # Render setzt PORT automatisch
 
 client = chromadb.HttpClient(
-    host="arno-llm-mvp-1.onrender.com",
+    host="arno-llm-mvp.onrender.com",
     port=443,
     ssl=True
 )
