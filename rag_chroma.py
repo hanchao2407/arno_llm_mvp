@@ -43,13 +43,14 @@ embedding_model = get_embedding_model()
 #    ssl=True
 # )
 
+
 client = chromadb.HttpClient(
     host="arno-llm-mvp-1.onrender.com",
-    port=443,
-    ssl=True
+    port=8000,            # Port muss 8000 sein laut Log
+    ssl=False,            # Kein HTTPS, läuft auf HTTP
+    tenant="default_tenant",
+    database="default_database"
 )
-collection = client.get_or_create_collection(name="legal_docs")
-
 
 
 
