@@ -14,6 +14,7 @@ st.set_page_config(page_title="Arnos Legal LLM", layout="wide")
 
 from sentence_transformers import SentenceTransformer
 import chromadb
+from chromadb.config import Settings
 from llm import call_llm
 
 # Embedding model laden (gecached)
@@ -37,11 +38,18 @@ embedding_model = get_embedding_model()
 
 # client = chromadb.HttpClient()
 
-client = chromadb.HttpClient(
-    host="https://arno-llm-mvp-1.onrender.com",
-    port=443,
-    ssl=True
-)
+# client = chromadb.HttpClient(
+#     host="https://arno-llm-mvp-1.onrender.com",
+#     port=443,
+#    ssl=True
+# )
+
+client = chromadb.Client(Settings(
+    chroma_api_impl="rest",
+    chroma_server_host="arno-llm-mvp-1.onrender.com",
+    chroma_server_http_port=443,
+    chroma_server_ssl_enabled=True
+))
 
 
 try:
