@@ -43,12 +43,6 @@ embedding_model = get_embedding_model()
 #    ssl=True
 # )
 
-""" client = chromadb.Client(Settings(
-    chroma_api_impl="rest",
-    chroma_server_host="arno-llm-mvp-1.onrender.com",
-    chroma_server_http_port=443,
-    chroma_server_ssl_enabled=True
-)) """
 
 
 client = chromadb.HttpClient(
