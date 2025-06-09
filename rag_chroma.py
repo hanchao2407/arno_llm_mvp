@@ -49,10 +49,9 @@ port = int(os.environ.get("PORT", 8000))  # Render setzt PORT automatisch
 client = chromadb.HttpClient(
     host="arno-llm-mvp.onrender.com",
     port=443,
-    ssl=True,
-    tenant="default_tenant",
-    database="default"
+    ssl=True
 )
+
 
 
 
