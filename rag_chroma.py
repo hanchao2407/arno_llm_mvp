@@ -57,14 +57,18 @@ client = chromadb.HttpClient(
 
 
 
+import traceback
+import sys
+
 try:
     collection = client.get_or_create_collection(name="legal_docs")
 except Exception as e:
-    if "already exists" in str(e):
-        collection = client.get_collection(name="legal_docs")
-    else:
-        st.error(f"❌ ChromaDB-Fehler:\n\n{str(e)}")
-        raise
+    print("⛔ Fehler beim Erstellen der Collection:")
+    print("➡", e)
+    traceback.print_exc(file=sys.stdout)
+    st.error("❌ ChromaDB-Fehler – siehe Logs für Details.")
+    raise
+
 
 def chunk_text(text, chunk_size=500, overlap=50):
     return [text[i:i + chunk_size] for i in range(0, len(text), chunk_size - overlap)]
