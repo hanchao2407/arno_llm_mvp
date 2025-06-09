@@ -61,13 +61,10 @@ import traceback
 import sys
 
 try:
-    collection = client.get_or_create_collection(name="legal_docs")
+    collection = client.get_collection(name="legal_docs")
 except Exception as e:
-    print("⛔ Fehler beim Erstellen der Collection:")
-    print("➡", e)
-    traceback.print_exc(file=sys.stdout)
-    st.error("❌ ChromaDB-Fehler – siehe Logs für Details.")
-    raise
+    st.error("❌ Collection 'legal_docs' existiert nicht auf dem Chroma-Server.")
+    st.stop()
 
 
 def chunk_text(text, chunk_size=500, overlap=50):
