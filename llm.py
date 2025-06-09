@@ -23,7 +23,7 @@ def call_llm(messages: list[dict]) -> str:
     data = {
         "model": "meta-llama/Llama-3-70b-chat-hf",
         "messages": messages,
-        "max_tokens": 512,
+        "max_tokens": 2048,
         "temperature": 0.2,
     }
 
