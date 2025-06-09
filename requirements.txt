@@ -1,5 +1,5 @@
 streamlit
-chromadb==0.4.24
+chromadb==0.4.13
 sentence-transformers
 PyPDF2
 torch
