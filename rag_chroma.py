@@ -44,12 +44,14 @@ embedding_model = get_embedding_model()
 # )
 
 
-
 client = chromadb.HttpClient(
     host="arno-llm-mvp-1.onrender.com",
     port=443,
-    ssl=True
+    ssl=True,
+    tenant="default_tenant",
+    database="default_database"
 )
+
 
 
 
