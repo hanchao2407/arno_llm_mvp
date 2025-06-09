@@ -131,7 +131,7 @@ if indexed_files:
         st.sidebar.markdown(f"• `{fname}`")
 
 # --- UI: Chatbereich ---
-st.title("📄 Legal Chat mit Chroma")
+st.title("📄 Arnos Legal LLM Demo")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
