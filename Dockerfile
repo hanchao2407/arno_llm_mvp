@@ -7,8 +7,9 @@ FROM ghcr.io/chroma-core/chroma:0.4.13
 # 'iproute2' enthält 'ss'
 # 'net-tools' enthält 'netstat'
 # 'curl' ist ein separates Paket
+# 'procps' enthält 'ps'
 RUN apt-get update && \
-    apt-get install -y iproute2 net-tools curl && \
+    apt-get install -y iproute2 net-tools curl procps && \
     rm -rf /var/lib/apt/lists/* # Bereinigung, um Image-Größe zu reduzieren
 
 # Notwendige ENV-Variablen für FastAPI-Server
@@ -18,6 +19,7 @@ ENV CHROMA_SERVER_HTTP_PORT=8000
 ENV IS_PERSISTENT=true
 
 # Kopiere vorbereitete Vector-Datenbank (optional)
+# COPY chroma_db /data # Temporarily removed or commented out
 
 # Starte den FastAPI-Server
 CMD ["uvicorn", "chromadb.app:app", "--host", "0.0.0.0", "--port", "8000"]
