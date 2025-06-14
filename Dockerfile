@@ -1,5 +1,6 @@
 # Verwende das offizielle Chroma-Image als Basis
-FROM ghcr.io/chroma-core/chroma:0.4.22 # CHANGED FROM 0.4.13 TO 0.4.22
+FROM ghcr.io/chroma-core/chroma:0.4.22 
+# CHANGED FROM 0.4.13 TO 0.4.22
 
 # Installiere benötigte Debugging-Tools
 # 'apt-get update' aktualisiert die Paketliste
