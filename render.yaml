@@ -3,7 +3,7 @@ services:
     name: chroma-db
     env: docker
     repo: https://github.com//hanchao2407/arno_llm_mvp
-    region: oregon
+    region: frankfurt 
     plan: free
     dockerfilePath: chroma_server/Dockerfile
     autoDeploy: false
