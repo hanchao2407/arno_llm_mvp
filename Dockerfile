@@ -18,7 +18,6 @@ ENV CHROMA_SERVER_HTTP_PORT=8000
 ENV IS_PERSISTENT=true
 
 # Kopiere vorbereitete Vector-Datenbank (optional)
-COPY chroma_db /data
 
 # Starte den FastAPI-Server
 CMD ["uvicorn", "chromadb.app:app", "--host", "0.0.0.0", "--port", "8000"]
