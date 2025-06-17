@@ -8,6 +8,7 @@ LLM Integration: Seamlessly integrates with large language models (LLMs) via the
 Contextual Q&amp;A: Answers user queries by augmenting the LLM's knowledge with information extracted directly from your private document collection.
 Source Citation: Displays relevant document chunks as sources, allowing users to verify the origin of the information.
 Responsive Chat Interface: A user-friendly chat interface built with Streamlit and custom CSS for an intuitive experience.
+
 🔒 Locally Deployable for Sensitive Use Cases
 A key advantage of the Arno Legal LLM MVP is its full local deployability. For sensitive use cases where data privacy, security, or compliance are paramount, the entire application stack, including the ChromaDB vector database and the Streamlit front-end, can be deployed and run entirely within your local or private infrastructure. This ensures your confidential legal documents remain within your control and never leave your trusted environment.
 
