@@ -97,6 +97,14 @@ def answer_query(db, query, top_k=5, relevance_threshold=0.5, return_context=Fal
         try:
             # Get documents, their metadatas, AND their distances
             results = current_collection.query(query_texts=[query], n_results=top_k, include=['documents', 'metadatas', 'distances'])
+            
+            # --- ADD THIS DEBUG LINE ---
+            # st.sidebar.write("--- Query Debug Info ---")
+            # st.sidebar.write(f"Query: {query}")
+            # st.sidebar.write(f"Raw Query Results (including distances): {results}")
+            # st.sidebar.write(f"Current relevance_threshold: {relevance_threshold}")
+            #st.sidebar.write("--- End Query Debug Info ---")
+            # --- END DEBUG LINE ---
 
             relevant_results = []
             if results and results.get("distances") and results.get("documents") and results.get("metadatas"):
@@ -234,7 +242,7 @@ if prompt := st.chat_input("Stelle deine juristische Frage..."):
     with st.spinner("💬 LLM denkt nach..."):
         try:
             # The answer_query function already uses st.session_state.db
-            answer, sources = answer_query(st.session_state.db, prompt, top_k=5, relevance_threshold=0.8)
+            answer, sources = answer_query(st.session_state.db, prompt, top_k=5, relevance_threshold=1.2)
             st.chat_message("assistant").markdown(answer)
             st.session_state.messages.append({"role": "assistant", "content": answer})
 
